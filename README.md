@@ -1,4 +1,4 @@
-For information on the Phazerville Suite, please see the [original repository](https://github.com/djphazer/O_C-Phazerville)
+For information on the Phazerville Suite, please see the [original repository](https://github.com/djphazer/O_C-Phazerville).
 Shoutout to djphazer of course, and everyone who's contributed to the firmware!
 
 This is a copy of Phazerville, with an added applet in Hemispheres mode called **EnsOscKey**.
