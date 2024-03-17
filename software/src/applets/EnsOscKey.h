@@ -46,6 +46,15 @@ public:
     }
 
     int determineInterval(int scale, int rootNote, int currentNote) {
+        int one_volt = HSAPPLICATION_5V / 5;
+        double maj_temp = (voltage_maj / 2.0 - 0.25) * one_volt;
+        int maj_out = static_cast<int>(maj_temp);
+        double min_temp = (voltage_min / 2.0 - 0.25) * one_volt;
+        int min_out = static_cast<int>(min_temp);
+        double dim_temp = (voltage_dim / 2.0 - 0.25) * one_volt;
+        int dim_out = static_cast<int>(dim_temp);
+        double no_match_temp = (voltage_no_match / 2.0 - 0.25) * one_volt;
+        int no_match_out = static_cast<int>(no_match_temp);
     // Calculate the number of semitones between root and current note
         int interval = (currentNote - rootNote + 12) % 12;
 
@@ -53,57 +62,129 @@ public:
         switch (scale) {
             case 6:  // Ionian (major)
                 if (interval == 0 || interval == 5 || interval == 7) // Major interval
+                    {
+                    chord_quality = 0;
                     return maj_out;
+                    }
                 else if (interval == 2 || interval == 4 || interval == 9) // Minor interval
+                    {
+                    chord_quality = 1;
                     return min_out;
+                    }
                 else if (interval == 11) // Diminished interval
+                    {
+                    chord_quality = 2;
                     return dim_out;
-                else return no_match_out;
+                    }
+                else {
+                    chord_quality = 3;
+                    return no_match_out;
+                }
                 break;
             case 7: // Dorian
                 if (interval == 3 || interval == 5 || interval == 10) // Major interval
+                    {
+                    chord_quality = 0;
                     return maj_out;
+                    }
                 else if (interval == 0 || interval == 2 || interval == 7) // Minor interval
+                    {
+                    chord_quality = 1;
                     return min_out;
+                    }
                 else if (interval == 9) // Diminished interval
+                    {
+                    chord_quality = 2;
                     return dim_out;
-                else return no_match_out;
+                    }
+                else {
+                    chord_quality = 3;
+                    return no_match_out;
+                    }
                 break;
             case 8: // Phrygian
                 if (interval == 1 || interval == 3 || interval == 8) // Major interval
+                    {
+                    chord_quality = 0;
                     return maj_out;
+                    }
                 else if (interval == 0 || interval == 5 || interval == 10) // Minor interval
+                   {
+                    chord_quality = 1;
                     return min_out;
+                    }
                 else if (interval == 7) // Diminished interval
+                    {
+                    chord_quality = 2;
                     return dim_out;
-                else return no_match_out;
+                    }
+                else {
+                    chord_quality = 3;
+                    return no_match_out;
+                    }
                 break;
             case 9: // Lydian
                 if (interval == 0 || interval == 2 || interval == 7) // Major interval
+                    {
+                    chord_quality = 0;
                     return maj_out;
+                    }
                 else if (interval == 4 || interval == 9 || interval == 11) // Minor interval
+                    {
+                    chord_quality = 1;
                     return min_out;
+                    }
                 else if (interval == 6) // Diminished interval
+                    {
+                    chord_quality = 2;
                     return dim_out;
-                else return no_match_out;
+                    }
+                else {
+                    chord_quality = 3;
+                    return no_match_out;
+                    }
                 break;
             case 10: // Mixolydian
                 if (interval == 0 || interval == 5 || interval == 10) // Major interval
+                    {
+                    chord_quality = 0;
                     return maj_out;
+                    }
                 else if (interval == 2 || interval == 7 || interval == 9) // Minor interval
+                    {
+                    chord_quality = 1;
                     return min_out;
+                    }
                 else if (interval == 4) // Diminished interval
+                    {
+                    chord_quality = 2;
                     return dim_out;
-                else return min_out;
+                    }
+                else {
+                    chord_quality = 3;
+                    return no_match_out;
+                    }
                 break;
             case 11: // Aeolian (minor)
                 if (interval == 3 || interval == 8 || interval == 10) // Major interval
+                    {
+                    chord_quality = 0;
                     return maj_out;
+                    }
                 else if (interval == 0 || interval == 5 || interval == 7) // Minor interval
+                    {
+                    chord_quality = 1;
                     return min_out;
+                    }
                 else if (interval == 2) // Diminished interval
+                    {
+                    chord_quality = 2;
                     return dim_out;
-                else return no_match_out;
+                    }
+                else {
+                    chord_quality = 3;
+                    return no_match_out;
+                    }
                 break;
         }
         // Default case
@@ -241,15 +322,7 @@ private:
     int voltage_dim = 5;
     int voltage_no_match = 6;
 
-    int one_volt = HSAPPLICATION_5V / 5;
-    double maj_temp = (voltage_maj / 2.0 - 0.25) * one_volt;
-    int maj_out = static_cast<int>(maj_temp);
-    double min_temp = (voltage_min / 2.0 - 0.25) * one_volt;
-    int min_out = static_cast<int>(min_temp);
-    double dim_temp = (voltage_dim / 2.0 - 0.25) * one_volt;
-    int dim_out = static_cast<int>(dim_temp);
-    double no_match_temp = (voltage_no_match / 2.0 - 0.25) * one_volt;
-    int no_match_out = static_cast<int>(no_match_temp);
+    int chord_quality = 0; // 0 = Maj, 1 = Min, 2 = Dim, 3 = No Match
 
     void DrawSelector()
     {
@@ -266,12 +339,12 @@ private:
         gfxPrint(10, 27, OC::Strings::note_names_unpadded[semitone]);
         gfxPrint(0, 27, "=");
 
-        // Draw Scale Quality
-        if (determineInterval(scale[0], root[0], semitone) == maj_out) {
+        // Draw Chord Quality
+        if (chord_quality == 0) {
             gfxPrint(27, 27, "Maj");
-        } else if (determineInterval(scale[0], root[0], semitone) == min_out) {
+        } else if (chord_quality == 1) {
             gfxPrint(27, 27, "Min");
-        } else if (determineInterval(scale[0], root[0], semitone) == dim_out) {
+        } else if (chord_quality == 2) {
             gfxPrint(27, 27, "Dim");
         } else {
             gfxPrint(27, 27, "N/A");
