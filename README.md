@@ -4,6 +4,8 @@ Shoutout to djphazer of course, and everyone who's contributed to the firmware!
 This is a copy of Phazerville, with an added applet in Hemispheres mode called **EnsOscKey**.
 This applet was designed for use with the 4ms Ensemble Oscillator. The goal is to change the Ensemble Oscillator's **Scale** value to the appropriate chord shape, given the root, scale, and current note.
 
+Get the download [here](https://github.com/ParkerMJones/Phazerville-EnsOscKey/releases/tag/EnsOscKeyv1.0)
+
 Check out a [video demonstration](https://youtu.be/lqLH0176VFw?si=NIXoEPxWpawai7iP)
 
 The applet is essentially a repurposed DualQuant, another applet from Hemispheres. Some functionality and behavior is retained.
